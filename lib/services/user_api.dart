@@ -1,0 +1,29 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:product_listing/models/user.dart';
+
+class UserApi {
+  static UserApi ?_instance;
+
+  UserApi._();
+
+  static UserApi? get instance {
+    if (_instance == null) {
+      _instance = UserApi._();
+    }
+    return _instance;
+  }
+
+  Future<List<User>> getAllUser() async {
+    // final getUser = await http.get('https://fakestoreapi.com/products', headers: {
+
+    var url = Uri.parse("https://fakestoreapi.com/products");
+
+    final getUser = await http.get(Uri.parse(url.toString()), headers: {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+    });
+    final List responseBody = jsonDecode(getUser.body);
+    return responseBody.map((e) => User.fromJson(e)).toList();
+  }
+}
